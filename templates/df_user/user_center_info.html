@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+		<div class="right_content clearfix">
+				<div class="info_con clearfix">
+				<h3 class="common_title2">基本信息</h3>
+						<ul class="user_info_list">
+							<li><span>用户名：</span>{{ user_name }}</li>
+							<li><span>联系方式：</span>{{ user_email }}</li>
+						</ul>
+				</div>
+				
+				<h3 class="common_title2">最近浏览</h3>
+				<div class="has_view_list">
+					<ul class="goods_type_list clearfix">
+                    {% if goods_list %}
+                        {% for good in goods_list %}
+                            <li>
+                                <a href="{% url 'goods:detail' good.id %}"><img src="/static/{{ good.gpic }}"></a>
+                                <h4><a href="{% url 'goods:detail' good.id %}">{{ good.gtitle }}</a></h4>
+                                <div class="operate">
+                                    <span class="prize">￥{{ good.gprice }}</span>
+                                    <span class="unit">{{ good.gprice }}/{{ good.gunit }}</span>
+                                    <a href="javascript:;" class="add_goods" id="{{ good.id }}" title="加入购物车"></a>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    {% else %}
+                        暂无浏览记录
+                    {% endif %}
+			</ul>
+		</div>
+		</div>
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript" src="{% static 'df_user/js/jquery-1.12.4.min.js' %}"></script>
+    <script>
+        $('#userInfo').attr('class','active');
+        $('.add_goods').each(function (index,item) {
+                $(item).click(function () {
+                    gid = $(item).attr('id');
+                    $.get('/cart/add'+gid+'_1_1/',function () {
+                        alert('添加成功');
+                    });
+                });
+            });
+    </script>
+{% endblock %}
+

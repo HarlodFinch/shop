@@ -1,0 +1,95 @@
+{% extends 'df_goods/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="breadcrumb">
+		<a href="{% url 'goods:index' %}">全部分类</a>
+		<span>></span>
+		<a href="#">{{ title }}</a>
+	</div>
+	<div class="main_wrap clearfix">
+		<div class="l_wrap fl clearfix">
+			<div class="new_goods">
+				<h3>新品推荐</h3>
+				<ul>
+                    {% for good in news %}
+                        <li>
+                            <a href="{% url 'goods:detail' good.id %}"><img src="{% static '' %}{{ good.gpic }}"></a>
+                            <h4><a href="{% url 'goods:detail' good.id %}">{{ good.gtitle }}</a></h4>
+                            <div class="prize">￥{{ good.gprice }}</div>
+                        </li>
+                    {% endfor %}
+				</ul>
+			</div>
+		</div>
+
+		<div class="r_wrap fr clearfix">
+			<div class="sort_bar">
+                {% if sort == 1 %}
+                    <a href="#" id="by_default" class="active">默认</a>
+                    <a href="{% url 'goods:list' tid page.number 2 %}" id="by_price">价格</a>
+                    <a href="{% url 'goods:list' tid page.number 3 %}" id="by_click">人气</a>
+                {% elif sort == 2 %}
+                    <a href="{% url 'goods:list' tid page.number 1 %}" id="by_default">默认</a>
+                    <a href="#" id="by_price" class="active">价格</a>
+                    <a href="{% url 'goods:list' tid page.number 3 %}" id="by_click">人气</a>
+                {% elif sort == 3 %}
+                    <a href="{% url 'goods:list' tid page.number 1 %}" id="by_default">默认</a>
+                    <a href="{% url 'goods:list' tid page.number 2 %}" id="by_price">价格</a>
+                    <a href="#" id="by_click" class="active">人气</a>
+                {% endif %}
+			</div>
+
+			<ul class="goods_type_list clearfix">
+                {% for good in page.object_list %}
+                    <li>
+                        <a href="{% url 'goods:detail' good.id %}"><img src="/static/{{ good.gpic }}"></a>
+                        <h4><a href="{% url 'goods:detail' good.id %}">{{ good.gtitle }}</a></h4>
+                        <div class="operate">
+                            <span class="prize">￥{{ good.gprice }}</span>
+                            <span class="unit">{{ good.gprice }}/{{ good.gunit }}</span>
+                            <a href="javascript:;" class="add_goods" id="{{ good.id }}" title="加入购物车"></a>
+                        </div>
+                    </li>
+                {% endfor %}
+			</ul>
+
+			<div class="pagenation">
+                <a href="#" id="ppage">上一页</a>
+                {% for i in paginator.page_range %}
+				<a
+                {% if page.number == i %}href="#" class="active"{% else %}href="{% url 'goods:list' tid i sort %}"{% endif %}
+                id="mpage">{{ i }}</a>
+                {% endfor %}
+				<a href="#" id="npage">下一页</a>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript" src="{% static 'df_user/js/jquery-1.12.4.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#ppage').click(function () {
+                var mpage = {{ page.number }}-1;
+                if(mpage){
+                    $(this).attr('href','/goods/list{{ tid }}_'+mpage+'_{{ sort }}/');
+                }
+            });
+            $('#npage').click(function () {
+                var mpage = {{ page.number }}+1;
+                if(mpage <= {{ paginator.num_pages }}){
+                    $(this).attr('href','/goods/list{{ tid }}_'+mpage+'_{{ sort }}/');
+                }
+            });
+            $('.add_goods').each(function (index,item) {
+                $(item).click(function () {
+                    gid = $(item).attr('id');
+                    $.get('/cart/add'+gid+'_1_1/',function () {
+                        $('.goods_count').html(parseInt($('.goods_count').html())+1);
+                        alert('添加成功');
+                    });
+                });
+            });
+        })
+    </script>
+{% endblock %}

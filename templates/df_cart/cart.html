@@ -1,0 +1,155 @@
+{% extends 'df_cart/base.html' %}
+{% load static %}
+{% block content %}
+	<div class="total_count">全部商品<em>0</em>件</div>
+	<ul class="cart_list_th clearfix">
+		<li class="col01">商品名称</li>
+		<li class="col02">商品单位</li>
+		<li class="col03">商品价格</li>
+		<li class="col04">数量</li>
+		<li class="col05">小计</li>
+		<li class="col06">操作</li>
+	</ul>
+    {% for cart in carts %}
+        <ul class="cart_list_td clearfix">
+            <li class="col01"><input type="checkbox" name="" id="{{ cart.goods.id }}"></li>
+            <li class="col02"><img src="{% static '' %}{{ cart.goods.gpic }}"></li>
+            <li class="col03">{{ cart.goods.gtitle }}<br><em>{{ cart.goods.gprice }}元/{{ cart.goods.gunit }}</em></li>
+            <li class="col04">{{ cart.goods.gunit }}</li>
+            <li class="col05">{{ cart.goods.gprice }}</li>
+            <li class="col06">
+                <div class="num_add">
+                    <a href="javascript:;" class="add fl">+</a>
+                    <input type="text" class="num_show fl" value="{{ cart.count }}">
+                    <a href="javascript:;" class="minus fl">-</a>
+                </div>
+            </li>
+            <li class="col07">{{ cart.goods.gprice }}</li>
+            <li class="col08"><a href="{% url 'cart:delete' cart.goods.id %}">删除</a></li>
+        </ul>
+    {% endfor %}
+    <ul class="settlements">
+		<li class="col01"><input type="checkbox" name="" id="all"></li>
+		<li class="col02">全选</li>
+		<li class="col03">合计(不含运费)：<span>¥</span><em>0</em><br>共计<b>0</b>件商品</li>
+		<li class="col04"><a href="javascript:;">去结算</a></li>
+	</ul>
+
+{% endblock %}
+{% block js %}
+    <script type="text/javascript" src="{% static 'df_user/js/jquery-1.12.4.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            var total=0;
+            var amount=0;
+            $('.total_count').children('em').html({{ carts.count }});
+            var goods = $('.allgoods').children('.cart_list_td');
+            for(var i=0;i<goods.length;i++)
+            {
+                var price = parseFloat($(goods[i]).children('.col05').html());
+                var count = parseInt($(goods[i]).find('.num_show').val());
+                $(goods[i]).find('.col07').html((price*count).toFixed(2));
+            }
+
+             var plus = $(goods).find('.add');
+            $(plus).each(function (index,item) {
+                $(item).click(function () {
+                    {% for cart in carts %}
+                        if('{{ forloop.counter }}'==index+1){
+                            $.get('/cart/addcount_{{ cart.goods.id }}/',function (data) {
+                                var price = parseFloat($(goods[index]).children('.col05').html());
+                                $(goods[index]).find('.num_show').val(data.count);
+                                $(goods[index]).find('.col07').html((price*data.count).toFixed(2));
+                                if($(cbs[index]).prop('checked')){
+                                    total += parseFloat({{ cart.goods.gprice }});
+                                    var finalprice = parseFloat($('.settlements').find('em').html());
+                                    $('.settlements').find('em').html((finalprice+parseFloat({{ cart.goods.gprice }})).toFixed(2));
+                                }
+                            });
+                        }
+                    {% endfor %}
+                });
+            });
+            var dec = $(goods).find('.minus');
+            $(dec).each(function (index,item) {
+                $(item).click(function () {
+                    {% for cart in carts %}
+                        if('{{ forloop.counter }}'==index+1){
+                            if(parseInt($(goods[index]).find('.num_show').val())>1){
+                                $.get('/cart/descount_{{ cart.goods.id }}/',function (data) {
+                                total -= parseFloat({{ cart.goods.gprice }});
+                                var price = parseFloat($(goods[index]).children('.col05').html());
+                                $(goods[index]).find('.num_show').val(data.count);
+                                $(goods[index]).find('.col07').html((price*data.count).toFixed(2));
+                                if($(cbs[index]).prop('checked')){
+                                    var finalprice = parseFloat($('.settlements').find('em').html());
+                                    $('.settlements').find('em').html((finalprice-parseFloat({{ cart.goods.gprice }})).toFixed(2));
+                                }
+                            });
+                            }
+                        }
+                    {% endfor %}
+                });
+            });
+
+            var cbs = $(goods).find('input[type="checkbox"]');
+            var allchose = $('.settlements').find('input[type="checkbox"]');
+            $(allchose).change(function () {
+                if($(this).prop('checked')){
+                    total=0;
+                    amount=0;
+                    $(cbs).each(function (index,item){
+                        $(item).prop('checked',true);
+                        total = total + parseFloat($(goods[index]).find('.col07').html());
+                        amount = amount+1;
+                    });
+                    $('.settlements').find('em').html(total.toFixed(2));
+                    $('.settlements').find('b').html(amount);
+                }else{
+                    $(cbs).each(function (index,item){
+                        $(item).prop('checked',false);
+                    });
+                    total=0;
+                    amount=0;
+                    $('.settlements').find('em').html(total);
+                    $('.settlements').find('b').html(amount);
+                }
+            });
+            $(cbs).each(function (index,item) {
+                $(item).change(function () {
+                    if($(item).prop('checked')){
+                        total = total + parseFloat($(goods[index]).find('.col07').html());
+                        amount = amount+1;
+                        $('.settlements').find('em').html(total.toFixed(2));
+                        $('.settlements').find('b').html(amount);
+                    }
+                    else{
+                        $(allchose).prop('checked',false);
+                        total = total - parseFloat($(goods[index]).find('.col07').html());
+                        amount = amount-1;
+                        $('.settlements').find('em').html(total.toFixed(2));
+                        $('.settlements').find('b').html(amount);
+                    }
+                });
+            });
+            $('.settlements').find('.col04').click(function () {
+                var allinput = $(':checked:not("#all")');
+                var s = ''
+                $(allinput).each(function (index,item) {
+                    if(index==0){
+                        s=s+'cart_id='+$(item).attr('id');
+                    }
+                    else{
+                        s = s+'&cart_id='+$(item).attr('id');
+                    }
+                });
+                if(s == ''){
+                    alert('您尚未选择商品，请选择提交');
+                }else{
+                    location.href='/cart/place_order/?'+s
+                }
+
+            });
+        })
+    </script>
+{% endblock %}

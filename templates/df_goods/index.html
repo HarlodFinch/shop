@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+	<script type="text/javascript" src="{% static 'df_user/js/jquery-ui.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'df_user/js/slide.js' %}"></script>
+{% endblock %}
+{% block indexcontent %}
+		<div class="slide fl">
+			<ul class="slide_pics">
+				<li><img src="{% static 'df_user/images/slide.jpg' %}" alt="幻灯片"></li>
+				<li><img src="{% static 'df_user/images/slide02.jpg' %}" alt="幻灯片"></li>
+				<li><img src="{% static 'df_user/images/slide03.jpg' %}" alt="幻灯片"></li>
+				<li><img src="{% static 'df_user/images/slide04.jpg' %}" alt="幻灯片"></li>
+			</ul>
+			<div class="prev"></div>
+			<div class="next"></div>
+			<ul class="points"></ul>
+		</div>
+		<div class="adv fl">
+			<a href="#"><img src="{% static 'df_user/images/adv01.jpg' %}"></a>
+			<a href="#"><img src="{% static 'df_user/images/adv02.jpg' %}"></a>
+		</div>
+    </div>
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model01">新鲜水果</h3>
+			<div class="subtitle fl">
+				<span>|</span>
+                {% for g in type01 %}
+				<a href="{% url 'goods:detail' g.id %}">{{ g.gtitle }}</a>
+                {% endfor %}
+			</div>
+			<a href="{% url 'goods:list' '1' '1' '1' %}" class="goods_more fr" id="fruit_more">查看更多 ></a>
+		</div>
+
+		<div class="goods_con clearfix">
+			<div class="goods_banner fl"><img src="{% static 'df_user/images/banner01.jpg' %}"></div>
+			<ul class="goods_list fl">
+                {% for type in type0 %}
+                    <li>
+                        <h4><a href="{% url 'goods:detail' type.id %}">{{ type.gtitle }}</a></h4>
+                        <a href="{% url 'goods:detail' type.id %}"><img src="{% static '' %}{{ type.gpic }}"/></a>
+                        <div class="prize">¥ {{ type.gprice }}</div>
+                    </li>
+                {% endfor %}
+			</ul>
+		</div>
+	</div>
+
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model02">海鲜水产</h3>
+			<div class="subtitle fl">
+				<span>|</span>
+				{% for g in type11 %}
+				<a href="{% url 'goods:detail' g.id %}">{{ g.gtitle }}</a>
+                {% endfor %}
+			</div>
+			<a href="{% url 'goods:list' '2' '1' '1' %}" class="goods_more fr">查看更多 ></a>
+		</div>
+
+		<div class="goods_con clearfix">
+			<div class="goods_banner fl"><img src="{% static 'df_user/images/banner02.jpg' %}"></div>
+			<ul class="goods_list fl">
+                {% for type in type1 %}
+                    <li>
+                        <h4><a href="{% url 'goods:detail' type.id %}">{{ type.gtitle }}</a></h4>
+                        <a href="{% url 'goods:detail' type.id %}"><img src="{% static '' %}{{ type.gpic }}"></a>
+                        <div class="prize">¥ {{ type.gprice }}</div>
+                    </li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model03">猪牛羊肉</h3>
+			<div class="subtitle fl">
+				<span>|</span>
+				{% for g in type21 %}
+				<a href="{% url 'goods:detail' g.id %}">{{ g.gtitle }}</a>
+                {% endfor %}
+			</div>
+			<a href="{% url 'goods:list' '3' '1' '1' %}" class="goods_more fr">查看更多 ></a>
+		</div>
+
+		<div class="goods_con clearfix">
+			<div class="goods_banner fl"><img src="{% static 'df_user/images/banner03.jpg' %}"></div>
+			<ul class="goods_list fl">
+                {% for type in type2 %}
+                    <li>
+                        <h4><a href="{% url 'goods:detail' type.id %}">{{ type.gtitle }}</a></h4>
+                        <a href="{% url 'goods:detail' type.id %}"><img src="{% static '' %}{{ type.gpic }}"></a>
+                        <div class="prize">¥ {{ type.gprice }}</div>
+                    </li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model04">禽类蛋品</h3>
+			<div class="subtitle fl">
+				<span>|</span>
+				{% for g in type31 %}
+				<a href="{% url 'goods:detail' g.id %}">{{ g.gtitle }}</a>
+                {% endfor %}
+			</div>
+			<a href="{% url 'goods:list' '4' '1' '1' %}" class="goods_more fr">查看更多 ></a>
+		</div>
+
+		<div class="goods_con clearfix">
+			<div class="goods_banner fl"><img src="{% static 'df_user/images/banner04.jpg' %}"></div>
+			<ul class="goods_list fl">
+                {% for type in type3 %}
+                    <li>
+                        <h4><a href="{% url 'goods:detail' type.id %}">{{ type.gtitle }}</a></h4>
+                        <a href="{% url 'goods:detail' type.id %}"><img src="{% static '' %}{{ type.gpic }}"></a>
+                        <div class="prize">¥ {{ type.gprice }}</div>
+                    </li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model05">新鲜蔬菜</h3>
+			<div class="subtitle fl">
+				<span>|</span>
+				{% for g in type41 %}
+				<a href="{% url 'goods:detail' g.id %}">{{ g.gtitle }}</a>
+                {% endfor %}
+			</div>
+			<a href="{% url 'goods:list' '5' '1' '1' %}" class="goods_more fr">查看更多 ></a>
+		</div>
+
+		<div class="goods_con clearfix">
+			<div class="goods_banner fl"><img src="{% static 'df_user/images/banner05.jpg' %}"></div>
+			<ul class="goods_list fl">
+                {% for type in type4 %}
+                    <li>
+                        <h4><a href="{% url 'goods:detail' type.id %}">{{ type.gtitle }}</a></h4>
+                        <a href="{% url 'goods:detail' type.id %}"><img src="{% static '' %}{{ type.gpic }}"></a>
+                        <div class="prize">¥ {{ type.gprice }}</div>
+                    </li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model06">速冻食品</h3>
+			<div class="subtitle fl">
+				<span>|</span>
+				{% for g in type51 %}
+				<a href="{% url 'goods:detail' g.id %}">{{ g.gtitle }}</a>
+                {% endfor %}
+			</div>
+			<a href="{% url 'goods:list' '6' '1' '1' %}" class="goods_more fr">查看更多 ></a>
+		</div>
+
+		<div class="goods_con clearfix">
+			<div class="goods_banner fl"><img src="{% static 'df_user/images/banner06.jpg' %}"></div>
+			<ul class="goods_list fl">
+                {% for type in type5 %}
+                    <li>
+                        <h4><a href="{% url 'goods:detail' type.id %}">{{ type.gtitle }}</a></h4>
+                        <a href="{% url 'goods:detail' type.id %}"><img src="{% static '' %}{{ type.gpic }}"></a>
+                        <div class="prize">¥ {{ type.gprice }}</div>
+                    </li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+{% endblock %}
+{% block javascript %}
+	<script type="text/javascript" src="js/slideshow.js"></script>
+	<script type="text/javascript">
+		BCSlideshow('focuspic');
+		var oFruit = document.getElementById('fruit_more');
+		var oShownum = document.getElementById('show_count');
+
+		var hasorder = localStorage.getItem('order_finish');
+
+		if(hasorder)
+		{
+			oShownum.innerHTML = '2';
+		}
+
+		oFruit.onclick = function(){
+			window.location.href = 'list.html';
+		}
+	</script>
+{% endblock %}
